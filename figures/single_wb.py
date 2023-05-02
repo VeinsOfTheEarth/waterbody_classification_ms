@@ -44,4 +44,4 @@ ax4.set_title("Highest resolution \n (perl)")
 ax4.axis("off")
 
 plt.tight_layout()
-plt.savefig("figures/single_wb.pdf")
+plt.savefig("figures/single_wb.png")

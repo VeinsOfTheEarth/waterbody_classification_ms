@@ -62,6 +62,5 @@ ax3.set_title("High resolution \n (wbextractor)")
 ax3.axis("off")
 
 plt.tight_layout()
-plt.show()
-
-plt.savefig("figures/floodplain.pdf", bbox_inches="tight")
+# plt.show()
+plt.savefig("figures/floodplain.png", bbox_inches="tight")
