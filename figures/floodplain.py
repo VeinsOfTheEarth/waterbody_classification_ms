@@ -53,7 +53,7 @@ ax2.axis("off")
 
 gpd_perl.plot(ax=ax3, legend=True, legend_kwds={"shrink": 0.6}, color="green")
 gpd_wbextractor.plot(ax=ax3, legend=True, legend_kwds={"shrink": 0.6}, color="blue")
-ax3.set_title("Highest resolution \n (wbextractor)")
+ax3.set_title("High resolution \n (wbextractor)")
 ax3.axis("off")
 
 plt.tight_layout()
