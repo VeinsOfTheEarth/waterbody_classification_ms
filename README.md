@@ -10,10 +10,11 @@ aoi: Yukon_Flats_Basin-buffered_mask_0669616
 
 ## single waterbody in various product resolutions
 
-hydrolakes id:
-realsat id:
-perl id:
+hydrolakes id: 398476
+glakes id: 2044484
+perl id: 1130
+wbextractor id: "28.0"
 
-# ndwi compare
+## ndwi compare
 
-aoi: 
+aoi
