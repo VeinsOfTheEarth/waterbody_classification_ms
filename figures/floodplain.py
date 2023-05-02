@@ -1,4 +1,4 @@
-# Yukon_Flats_Basin-buffered_mask_0669616
+# wbpopulate --folder 0669616 --tag 0669616 --aoi ~/data/CubeSat_Arctic_Boreal_LakeArea_1667/data/Yukon_Flats_Basin-buffered_mask_0669616.tif --model ../torchwbtype/torchwbtype/data
 import os
 import glob
 import pandas as pd
