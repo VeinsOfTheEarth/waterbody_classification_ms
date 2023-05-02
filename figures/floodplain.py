@@ -16,8 +16,10 @@ bbox = box(minx, miny, maxx, maxy)
 bbox_gpd = gpd.GeoDataFrame(geometry=[bbox], crs=4326)
 bbox_gpd.to_file("data/bbox.gpkg", driver="GPKG")
 
-path_hydrolakes = data_folder + "/hydrolakes_data/HydroLAKES_polys_v10_shp/HydroLAKES_polys_v10.shp"
-gpd_hydrolakes = gpd.read_file(path_hydrolakes, bbox = (minx, miny, maxx, maxy))
+path_hydrolakes = (
+    data_folder + "/hydrolakes_data/HydroLAKES_polys_v10_shp/HydroLAKES_polys_v10.shp"
+)
+gpd_hydrolakes = gpd.read_file(path_hydrolakes, bbox=(minx, miny, maxx, maxy))
 gpd_hydrolakes.to_file("data/hydrolakes.gpkg", driver="GPKG")
 
 if not os.path.exists("data/perl.gpkg"):
@@ -25,17 +27,19 @@ if not os.path.exists("data/perl.gpkg"):
     f_perl = glob.glob(path_perl + "/*.shp")
     gpd_perl_all = pd.concat([gpd.read_file(x) for x in f_perl]).to_crs(4326)
     gpd_perl_all.to_file("data/perl_all.gpkg", driver="GPKG")
-    gpd_perl = gpd.read_file("data/perl_all.gpkg", bbox = (minx, miny, maxx, maxy))
+    gpd_perl = gpd.read_file("data/perl_all.gpkg", bbox=(minx, miny, maxx, maxy))
     # os.remove("perl_all.gpkg")
     gpd_perl.to_file("data/perl.gpkg", driver="GPKG")
 gpd_perl = gpd.read_file("data/perl.gpkg")
 
 path_glakes = data_folder + "/GLAKES/GLAKES/GLAKES_na2.shp"
-gpd_glakes = gpd.read_file(path_glakes, bbox = (minx, miny, maxx, maxy))
+gpd_glakes = gpd.read_file(path_glakes, bbox=(minx, miny, maxx, maxy))
 gpd_glakes.to_file("data/glakes.gpkg", driver="GPKG")
 
 # gpd.read_file("data/wb_all_0669616.gpkg").to_crs(4326).to_file("data/wb_all_0669616_4326.gpkg", driver="GPKG")
-gpd_wbextractor = gpd.read_file("data/wb_all_0669616_4326.gpkg", bbox = (minx, miny, maxx, maxy))
+gpd_wbextractor = gpd.read_file(
+    "data/wb_all_0669616_4326.gpkg", bbox=(minx, miny, maxx, maxy)
+)
 gpd_wbextractor.to_file("data/wbextractor.gpkg", driver="GPKG")
 
 # ---
