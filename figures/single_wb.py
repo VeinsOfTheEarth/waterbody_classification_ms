@@ -17,31 +17,37 @@ bnds = gpd_perl[gpd_perl["id"] == 1130].total_bounds
 crs = gpd_perl.crs
 bnds_gdf = gpd.GeoDataFrame({"idx": [1], "geometry": [box(*np.array(bnds))]}, crs=crs)
 
-fig, axs = plt.subplots(2, 2)
+# ---
+
+plt.close()
+fig, axs = plt.subplots(2, 2) # , constrained_layout=True
 ax1 = axs[0, 0]
 ax2 = axs[0, 1]
 ax3 = axs[1, 0]
 ax4 = axs[1, 1]
 
 bnds_gdf.plot(ax=ax1, color="white")
-gpd_hydrolakes[gpd_hydrolakes["Hylak_id"] == 398476].plot(ax=ax1, color="yellow")
-ax1.set_title("Medium resolution \n (HydroLAKES)")
+gpd_hydrolakes[gpd_hydrolakes["Hylak_id"] == 398476].plot(ax=ax1,edgecolor="black", facecolor="yellow")
+ax1.set_title("HydroLAKES")
 ax1.axis("off")
+# extent = ax1.get_window_extent().transformed(fig.dpi_scale_trans.inverted())
+# fig.savefig("test.png", bbox_inches=extent.expanded(1.1, 1.2))
 
 bnds_gdf.plot(ax=ax2, color="white")
-gpd_glakes[gpd_glakes["Lake_id"] == 2044484].plot(ax=ax2, color="pink")
-ax2.set_title("Medium resolution \n (GLAKES)")
+gpd_perl[gpd_perl["id"] == 1130].plot(ax=ax2, edgecolor="black", facecolor="green")
+ax2.set_title("PeRL")
 ax2.axis("off")
 
 bnds_gdf.plot(ax=ax3, color="white")
-gpd_wbextractor[gpd_wbextractor["id"] == "28.0"].plot(ax=ax3, color="blue")
-ax3.set_title("High resolution \n (wbextractor)")
+gpd_glakes[gpd_glakes["Lake_id"] == 2044484].plot(ax=ax3, edgecolor="black", facecolor="pink")
+ax3.set_title("GLAKES")
 ax3.axis("off")
 
 bnds_gdf.plot(ax=ax4, color="white")
-gpd_perl[gpd_perl["id"] == 1130].plot(ax=ax4, color="green")
-ax4.set_title("Highest resolution \n (perl)")
+gpd_wbextractor[gpd_wbextractor["id"] == "28.0"].plot(ax=ax4, edgecolor="black", facecolor="blue")
+ax4.set_title("wbextractor (this study)")
 ax4.axis("off")
 
-plt.tight_layout()
-plt.savefig("figures/single_wb.png")
+# plt.tight_layout()
+plt.subplots_adjust(wspace=-0.2)
+plt.savefig("figures/single_wb.png", bbox_inches="tight")
