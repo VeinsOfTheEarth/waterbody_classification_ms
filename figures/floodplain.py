@@ -1,12 +1,17 @@
 # wbpopulate --folder 0669616 --tag 0669616 --aoi ~/data/CubeSat_Arctic_Boreal_LakeArea_1667/data/Yukon_Flats_Basin-buffered_mask_0669616.tif --model ../torchwbtype/torchwbtype/data
 import os
 import glob
+import numpy as np
 import pandas as pd
+import seaborn as sns
 import geopandas as gpd
-import cartopy.crs as ccrs
 import matplotlib.pyplot as plt
 from shapely.geometry import box
-import cartopy.feature as cfeature
+
+# import cartopy.crs as ccrs
+# import cartopy.feature as cfeature
+
+from wbextractor import blobs  # type: ignore
 
 
 data_folder = "C:/Vote Data"
@@ -64,3 +69,36 @@ ax3.axis("off")
 plt.tight_layout()
 # plt.show()
 plt.savefig("figures/floodplain.png", bbox_inches="tight")
+
+# ---
+test = gpd_perl[gpd_perl.area > float(np.quantile(gpd_perl.area, [0.1]))]
+if not os.path.exists("data/perl_buffer.gpkg"):
+    gpd_perl_buffer = test.to_crs(crs=32606).buffer(60).to_crs(4326)
+    gpd_perl_buffer.to_file("data/perl_buffer.gpkg", driver="GPKG")
+gpd_perl_buffer = gpd.read_file("data/perl_buffer.gpkg")
+x = gpd.GeoDataFrame(
+    {
+        "id": [x for x in range(gpd_perl_buffer.shape[0])],
+        "layer": 0,
+        "geometry_filtered": test.geometry,
+        "lake_prediction": 1,
+    },
+    geometry=gpd_perl_buffer.geometry,
+)
+gpkg, xwalk = blobs.consolidate_multiples(x)
+
+dt = pd.concat(
+    [
+        pd.DataFrame({"source": "perl", "area": [x for x in gpkg.area]}),
+        pd.DataFrame({"source": "glakes", "area": [x for x in gpd_glakes.area]}),
+        pd.DataFrame(
+            {"source": "hydrolakes", "area": [x for x in gpd_hydrolakes.area]}
+        ),
+        pd.DataFrame(
+            {"source": "wbconvert", "area": [x for x in gpd_wbextractor.explode().area]}
+        ),
+    ]
+)
+sns.displot(dt.reset_index(drop=True), x="area", hue="source", kind="ecdf")
+plt.xscale("log")
+plt.savefig("figures/accuracy.png")
