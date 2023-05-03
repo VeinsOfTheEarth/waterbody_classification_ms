@@ -112,6 +112,14 @@ dt = pd.concat(
         ),
     ]
 )
-sns.displot(dt.reset_index(drop=True), x="area", hue="source", kind="ecdf")
+sns.displot(
+    dt.reset_index(drop=True),
+    x="area",
+    hue="source",
+    kind="ecdf",
+    height=2,
+    aspect=3 / 2,
+    palette=["green", "pink", "yellow", "blue"],
+)
 plt.xscale("log")
 plt.savefig("figures/accuracy.png")
