@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 import geopandas as gpd
+import contextily as cx
 import matplotlib.pyplot as plt
 from shapely.geometry import box
 
@@ -20,6 +21,8 @@ data_folder = "C:/Vote Data"
 bbox = box(minx, miny, maxx, maxy)
 bbox_gpd = gpd.GeoDataFrame(geometry=[bbox], crs=4326)
 bbox_gpd.to_file("data/bbox.gpkg", driver="GPKG")
+
+osm_river = gpd.read_file("data/osm.gpkg")
 
 path_hydrolakes = (
     data_folder + "/hydrolakes_data/HydroLAKES_polys_v10_shp/HydroLAKES_polys_v10.shp"
@@ -49,21 +52,31 @@ gpd_wbextractor.to_file("data/wbextractor.gpkg", driver="GPKG")
 
 # ---
 
+plt.close()
 fig, (ax1, ax2, ax3) = plt.subplots(1, 3)
 
 gpd_perl.plot(ax=ax1, legend=True, legend_kwds={"shrink": 0.6}, color="green")
+osm_river.plot(ax=ax1, color="blue")
 gpd_hydrolakes.plot(ax=ax1, legend=True, legend_kwds={"shrink": 0.6}, color="yellow")
 ax1.set_title("Medium resolution \n (HydroLAKES)")
+ax1.set_xlim(([minx, maxx + 0.007]))
+ax1.set_ylim(([miny, maxy]))
 ax1.axis("off")
 
 gpd_perl.plot(ax=ax2, legend=True, legend_kwds={"shrink": 0.6}, color="green")
+osm_river.plot(ax=ax2, color="blue")
 gpd_glakes.plot(ax=ax2, legend=True, legend_kwds={"shrink": 0.6}, color="pink")
 ax2.set_title("Medium resolution \n (GLAKES)")
+ax2.set_xlim(([minx, maxx + 0.007]))
+ax2.set_ylim(([miny, maxy]))
 ax2.axis("off")
 
 gpd_perl.plot(ax=ax3, legend=True, legend_kwds={"shrink": 0.6}, color="green")
+osm_river.plot(ax=ax3, color="blue")
 gpd_wbextractor.plot(ax=ax3, legend=True, legend_kwds={"shrink": 0.6}, color="blue")
 ax3.set_title("High resolution \n (wbextractor)")
+ax3.set_xlim(([minx, maxx + 0.007]))
+ax3.set_ylim(([miny, maxy]))
 ax3.axis("off")
 
 plt.tight_layout()
