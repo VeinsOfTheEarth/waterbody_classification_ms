@@ -13,4 +13,5 @@ manuscript: manuscript/manuscript.pdf
 manuscript/manuscript.pdf: manuscript/manuscript.tex manuscript/riverlakeid.bib
 	cd manuscript && pdflatex manuscript.tex
 	cd manuscript && bibtex manuscript
+	cd manuscript && bibtex manuscript
 	cd manuscript && pdflatex manuscript.tex
