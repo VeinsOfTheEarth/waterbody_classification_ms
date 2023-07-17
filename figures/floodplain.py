@@ -81,7 +81,7 @@ ax3.axis("off")
 
 plt.tight_layout()
 # plt.show()
-plt.savefig("figures/floodplain.png", bbox_inches="tight")
+plt.savefig("figures/floodplain.pdf", bbox_inches="tight")
 
 # ---
 test = gpd_perl[gpd_perl.area > float(np.quantile(gpd_perl.area, [0.1]))]
@@ -122,4 +122,4 @@ sns.displot(
     palette=["green", "pink", "yellow", "blue"],
 )
 plt.xscale("log")
-plt.savefig("figures/accuracy.png")
+plt.savefig("figures/accuracy.pdf")
