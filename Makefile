@@ -1,11 +1,11 @@
 .PHONY: all manuscript
 
-all: figures/single_wb.png figures/floodplain.png
+all: figures/single_wb.pdf figures/floodplain.pdf
 
-figures/single_wb.png: figures/single_wb.py
+figures/single_wb.pdf: figures/single_wb.py
 	python $<
 
-figures/floodplain.png: figures/floodplain.py
+figures/floodplain.pdf: figures/floodplain.py
 	python $<
 
 manuscript: manuscript/manuscript.pdf
