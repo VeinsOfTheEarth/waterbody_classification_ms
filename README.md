@@ -1,5 +1,11 @@
 ## Scalable machine learning pipelines for waterbody detection, classification, and change detection
 
+[![Paper DOI](https://img.shields.io/badge/Paper-DOI-blue.svg)](https://doi.org) [![Code DOI](https://img.shields.io/badge/Code-DOI-blue.svg)](https://doi.org) [![Data DOI](https://img.shields.io/badge/Data-DOI-blue.svg)](https://doi.org)
+
+Code for the publication:
+
+> **Stachelek, J.**, Abolt, C.J., Schwenk, J., Scalable machine learning pipelines for waterbody delineation, classification, and change detection.
+
 ### single waterbody in various product resolutions
 
 ![](figures/single_wb.png)
