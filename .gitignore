@@ -6,3 +6,5 @@ manuscript/*.log
 manuscript/*.blg
 manuscript/*.bbl
 manuscript/*.aux
+*.pptx
+*.xcf

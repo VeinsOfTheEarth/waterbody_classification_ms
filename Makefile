@@ -1,6 +1,10 @@
-.PHONY: all manuscript
+.PHONY: all manuscript figures
 
-all: figures/single_wb.pdf figures/floodplain.pdf
+all: manuscript
+
+manuscript: manuscript/manuscript.pdf
+
+figures: figures/single_wb.pdf figures/floodplain.pdf
 
 figures/single_wb.pdf: figures/single_wb.py
 	python $<
