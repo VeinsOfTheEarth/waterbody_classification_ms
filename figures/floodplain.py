@@ -93,7 +93,9 @@ plt.savefig("figures/floodplain.pdf", bbox_inches="tight")
 
 # ---
 geo_crs = gpd.read_file("data/wb_all_0669616.gpkg").crs
+# rm slivers
 test = gpd_perl[gpd_perl.area > float(np.quantile(gpd_perl.area, [0.1]))]
+# deal with overlaps
 if not os.path.exists("data/perl_buffer.gpkg"):
     gpd_perl_buffer = test.to_crs(crs=32606).buffer(60).to_crs(4326)
     gpd_perl_buffer.to_file("data/perl_buffer.gpkg", driver="GPKG")
@@ -108,6 +110,7 @@ x = gpd.GeoDataFrame(
     geometry=gpd_perl_buffer.geometry,
 )
 gpkg, xwalk = blobs.consolidate_multiples(x)
+gpkg.to_file("data/perl_clean.gpkg")
 gpkg = gpkg.to_crs(geo_crs)
 gpd_glakes = gpd_glakes.to_crs(geo_crs)
 gpd_hydrolakes = gpd_hydrolakes.to_crs(geo_crs)
