@@ -5,7 +5,8 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 import geopandas as gpd
-import contextily as cx
+
+# import contextily as cx
 import matplotlib.pyplot as plt
 from shapely.geometry import box
 
@@ -14,21 +15,26 @@ from shapely.geometry import box
 
 from wbextractor import blobs  # type: ignore
 
-
 data_folder = "C:/Vote Data"
 # (minx, miny, maxx, maxy) = (74.38, 62.18, 74.48, 62.3) # russia, overlap with Pi paper
 (minx, miny, maxx, maxy) = (-146.11, 66.18, -146.03, 66.22)
-bbox = box(minx, miny, maxx, maxy)
-bbox_gpd = gpd.GeoDataFrame(geometry=[bbox], crs=4326)
-bbox_gpd.to_file("data/bbox.gpkg", driver="GPKG")
+
+if not os.path.exists("data/bbox.gpkg"):
+    bbox = box(minx, miny, maxx, maxy)
+    bbox_gpd = gpd.GeoDataFrame(geometry=[bbox], crs=4326)
+    bbox_gpd.to_file("data/bbox.gpkg", driver="GPKG")
+bbox_gpd = gpd.read_file("data/bbox.gpkg")
 
 osm_river = gpd.read_file("data/osm.gpkg")
 
-path_hydrolakes = (
-    data_folder + "/hydrolakes_data/HydroLAKES_polys_v10_shp/HydroLAKES_polys_v10.shp"
-)
-gpd_hydrolakes = gpd.read_file(path_hydrolakes, bbox=(minx, miny, maxx, maxy))
-gpd_hydrolakes.to_file("data/hydrolakes.gpkg", driver="GPKG")
+if not os.path.exists("data/hydrolakes.gpkg"):
+    path_hydrolakes = (
+        data_folder
+        + "/hydrolakes_data/HydroLAKES_polys_v10_shp/HydroLAKES_polys_v10.shp"
+    )
+    gpd_hydrolakes = gpd.read_file(path_hydrolakes, bbox=(minx, miny, maxx, maxy))
+    gpd_hydrolakes.to_file("data/hydrolakes.gpkg", driver="GPKG")
+gpd_hydrolakes = gpd.read_file("data/hydrolakes.gpkg")
 
 if not os.path.exists("data/perl.gpkg"):
     path_perl = data_folder + "/perl/waterbodies"
@@ -40,9 +46,11 @@ if not os.path.exists("data/perl.gpkg"):
     gpd_perl.to_file("data/perl.gpkg", driver="GPKG")
 gpd_perl = gpd.read_file("data/perl.gpkg")
 
-path_glakes = data_folder + "/GLAKES/GLAKES/GLAKES_na2.shp"
-gpd_glakes = gpd.read_file(path_glakes, bbox=(minx, miny, maxx, maxy))
-gpd_glakes.to_file("data/glakes.gpkg", driver="GPKG")
+if not os.path.exists("data/glakes.gpkg"):
+    path_glakes = data_folder + "/GLAKES/GLAKES/GLAKES_na2.shp"
+    gpd_glakes = gpd.read_file(path_glakes, bbox=(minx, miny, maxx, maxy))
+    gpd_glakes.to_file("data/glakes.gpkg", driver="GPKG")
+gpd_glakes = gpd.read_file("data/glakes.gpkg")
 
 # gpd.read_file("data/wb_all_0669616.gpkg").to_crs(4326).to_file("data/wb_all_0669616_4326.gpkg", driver="GPKG")
 gpd_wbextractor = gpd.read_file(
@@ -84,6 +92,7 @@ plt.tight_layout()
 plt.savefig("figures/floodplain.pdf", bbox_inches="tight")
 
 # ---
+geo_crs = gpd.read_file("data/wb_all_0669616.gpkg").crs
 test = gpd_perl[gpd_perl.area > float(np.quantile(gpd_perl.area, [0.1]))]
 if not os.path.exists("data/perl_buffer.gpkg"):
     gpd_perl_buffer = test.to_crs(crs=32606).buffer(60).to_crs(4326)
@@ -99,6 +108,10 @@ x = gpd.GeoDataFrame(
     geometry=gpd_perl_buffer.geometry,
 )
 gpkg, xwalk = blobs.consolidate_multiples(x)
+gpkg = gpkg.to_crs(geo_crs)
+gpd_glakes = gpd_glakes.to_crs(geo_crs)
+gpd_hydrolakes = gpd_hydrolakes.to_crs(geo_crs)
+gpd_wbextractor = gpd_wbextractor.to_crs(geo_crs)
 
 dt = pd.concat(
     [
