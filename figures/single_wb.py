@@ -6,7 +6,7 @@ import numpy as np
 import geopandas as gpd
 import matplotlib.pyplot as plt
 from shapely.geometry import box
-import matplotlib.transforms as mtrans
+from matplotlib.gridspec import GridSpec
 
 gpd_hydrolakes = gpd.read_file("data/hydrolakes.gpkg")
 gpd_glakes = gpd.read_file("data/glakes.gpkg")
@@ -20,50 +20,62 @@ bnds_gdf = gpd.GeoDataFrame({"idx": [1], "geometry": [box(*np.array(bnds))]}, cr
 
 # ---
 plt.close()
-fig, axs = plt.subplots(2, 2)  # , constrained_layout=True
-ax1 = axs[0, 0]
-ax2 = axs[0, 1]
-ax3 = axs[1, 0]
-ax4 = axs[1, 1]
+fig = plt.figure()
+gs = GridSpec(2, 3, figure=fig)
+# vertical, horizontal
+ax1 = fig.add_subplot(gs[0:1, 0])
+ax2a = fig.add_subplot(gs[0, 1])
+ax2b = fig.add_subplot(gs[0, 2])
+ax2c = fig.add_subplot(gs[1, 1])
+ax2d = fig.add_subplot(gs[1, 2])
 
-bnds_gdf.plot(ax=ax1, color="white")
+bnds_gdf.plot(ax=ax2a, color="white")
 gpd_hydrolakes[gpd_hydrolakes["Hylak_id"] == 398476].plot(
-    ax=ax1, edgecolor="black", facecolor="yellow"
+    ax=ax2a, edgecolor="black", facecolor="yellow"
 )
-ax1.set_title("HydroLAKES")
-ax1.axis("off")
-# extent = ax1.get_window_extent().transformed(fig.dpi_scale_trans.inverted())
-# fig.savefig("test.png", bbox_inches=extent.expanded(1.1, 1.2))
+ax2a.set_title("HydroLAKES")
+ax2a.axis("off")
 
-bnds_gdf.plot(ax=ax2, color="white")
-gpd_perl[gpd_perl["id"] == 1130].plot(ax=ax2, edgecolor="black", facecolor="green")
-ax2.set_title("PeRL")
-ax2.axis("off")
+bnds_gdf.plot(ax=ax2b, color="white")
+gpd_perl[gpd_perl["id"] == 1130].plot(ax=ax2b, edgecolor="black", facecolor="green")
+ax2b.set_title("PeRL")
+ax2b.axis("off")
 
-bnds_gdf.plot(ax=ax3, color="white")
+bnds_gdf.plot(ax=ax2c, color="white")
 gpd_glakes[gpd_glakes["Lake_id"] == 2044484].plot(
-    ax=ax3, edgecolor="black", facecolor="pink"
+    ax=ax2c, edgecolor="black", facecolor="pink"
 )
-ax3.set_title("GLAKES")
-ax3.axis("off")
+ax2c.set_title("GLAKES")
+ax2c.axis("off")
 
-bnds_gdf.plot(ax=ax4, color="white")
+bnds_gdf.plot(ax=ax2d, color="white")
 gpd_wbextractor[gpd_wbextractor["id"] == "28.0"].plot(
-    ax=ax4, edgecolor="black", facecolor="blue"
+    ax=ax2d, edgecolor="black", facecolor="blue"
 )
-ax4.set_title("wbextractor (this study)")
-ax4.axis("off")
+ax2d.set_title("wbextractor")
+ax2d.axis("off")
+
+image = plt.imread("figures/satview.png")
+satview = ax1.imshow(image, extent=[0, 2, 2, 0])
+ax1.set_title("Imagery (ESRI)", y=1.1)
+ax1.axis("off")
 
 # plt.tight_layout()
-plt.subplots_adjust(wspace=0.2, hspace=0.35)
+plt.subplots_adjust(wspace=0, hspace=0.35)
 
-# ---
-# horizontal line
-line = plt.Line2D([0.1,0.9],[0.55,0.55], transform=fig.transFigure, color="black")
-fig.add_artist(line)
-# vertical line
-line = plt.Line2D([0.5,0.5], [0.98,0.1], transform=fig.transFigure, color="black")
-fig.add_artist(line)
+# --- lines
+# horizontal
+# line = plt.Line2D([0.5, 0.95], [0.4, 0.4], transform=fig.transFigure, color="black")
+# fig.add_artist(line)
+# # vertical
+# line = plt.Line2D([0.7, 0.7], [0.7, 0.1], transform=fig.transFigure, color="black")
+# fig.add_artist(line)
+
+# --- arrows
+# ax1.annotate("Test 2", xy=(0.5, 1.), xycoords=ax1,
+#                   xytext=(0.5,1.1), textcoords=(ax1, "axes fraction"),
+#                   va="bottom", ha="center",
+#                   arrowprops=dict(arrowstyle="->"))
 
 # ---
 plt.savefig("figures/single_wb.pdf", bbox_inches="tight")
