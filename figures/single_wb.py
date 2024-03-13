@@ -6,6 +6,7 @@ import numpy as np
 import geopandas as gpd
 import matplotlib.pyplot as plt
 from shapely.geometry import box
+import matplotlib.transforms as mtrans
 
 gpd_hydrolakes = gpd.read_file("data/hydrolakes.gpkg")
 gpd_glakes = gpd.read_file("data/glakes.gpkg")
@@ -18,7 +19,6 @@ crs = gpd_perl.crs
 bnds_gdf = gpd.GeoDataFrame({"idx": [1], "geometry": [box(*np.array(bnds))]}, crs=crs)
 
 # ---
-
 plt.close()
 fig, axs = plt.subplots(2, 2)  # , constrained_layout=True
 ax1 = axs[0, 0]
@@ -55,5 +55,15 @@ ax4.set_title("wbextractor (this study)")
 ax4.axis("off")
 
 # plt.tight_layout()
-plt.subplots_adjust(wspace=-0.2)
+plt.subplots_adjust(wspace=0.2, hspace=0.35)
+
+# ---
+# horizontal line
+line = plt.Line2D([0.1,0.9],[0.55,0.55], transform=fig.transFigure, color="black")
+fig.add_artist(line)
+# vertical line
+line = plt.Line2D([0.5,0.5], [0.98,0.1], transform=fig.transFigure, color="black")
+fig.add_artist(line)
+
+# ---
 plt.savefig("figures/single_wb.pdf", bbox_inches="tight")
