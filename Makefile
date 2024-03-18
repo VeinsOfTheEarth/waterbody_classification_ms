@@ -1,6 +1,6 @@
 .PHONY: all manuscript figures
 
-all: manuscript
+all: manuscript figures
 
 manuscript: manuscript/manuscript.pdf
 

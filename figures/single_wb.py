@@ -23,7 +23,7 @@ plt.close()
 fig = plt.figure()
 gs = GridSpec(2, 3, figure=fig)
 # vertical, horizontal
-ax1 = fig.add_subplot(gs[0:1, 0])
+# ax1 = fig.add_subplot(gs[0:1, 0])
 ax2a = fig.add_subplot(gs[0, 1])
 ax2b = fig.add_subplot(gs[0, 2])
 ax2c = fig.add_subplot(gs[1, 1])
@@ -55,10 +55,7 @@ gpd_wbextractor[gpd_wbextractor["id"] == "28.0"].plot(
 ax2d.set_title("wbextractor")
 ax2d.axis("off")
 
-image = plt.imread("figures/satview.png")
-satview = ax1.imshow(image, extent=[0, 2, 2, 0])
-ax1.set_title("Imagery (ESRI)", y=1.1)
-ax1.axis("off")
+# ax1.axis("off")
 
 # plt.tight_layout()
 plt.subplots_adjust(wspace=0, hspace=0.35)
@@ -79,3 +76,12 @@ plt.subplots_adjust(wspace=0, hspace=0.35)
 
 # ---
 plt.savefig("figures/single_wb.pdf", bbox_inches="tight")
+
+plt.close()
+fig, axs = plt.subplots(1, 1)  # , constrained_layout=True
+image = plt.imread("figures/satview.png")
+satview = axs.imshow(image, extent=[0, 2, 2, 0])
+axs.set_title("Imagery (ESRI)", y=1.1, fontsize=24)
+axs.axis("off")
+plt.tight_layout()
+plt.savefig("figures/satview_out.pdf")
