@@ -3,7 +3,6 @@
 # https://coolum001.github.io/cartopylayout.html
 
 import numpy as np
-import pandas as pd
 import geopandas as gpd
 import cartopy.crs as ccrs
 import matplotlib.pyplot as plt
@@ -62,14 +61,12 @@ def scale_bar(ax, length=None, location=(0.5, 0.05), linewidth=3):
         verticalalignment="top",
     )
 
-
 aoi = gpd.read_file("data/bbox.gpkg", driver="GPKG")
-aoi_bounds = [x for x in aoi.bounds.iloc[0]]
-extent = (aoi_bounds[0], aoi_bounds[2], aoi_bounds[1], aoi_bounds[3])
 extent = (-145.5, -148, 64.5, 66.5)
 
 plt.close()
-ncol = 1
+# fig, axs = plt.subplots(1, 2)
+ncol = 2
 nrow = 1
 fig = plt.figure(figsize=(ncol + 3, nrow + 3))
 axes = gridspec.GridSpec(nrow, ncol, wspace=0.0, hspace=0.0, top=1, right=0.9)
@@ -101,14 +98,27 @@ ax.yaxis.set_major_formatter(lat_formatter)
 # ---
 scale_bar(ax, location=(0.5, 0.06), length=100)
 # ---
-left = 0.68
+left = 0.46
 bottom = 0.85
 width = 0.04
 height = 0.25
 rect = [left, bottom, width, height]
 ax2 = plt.axes(rect)
-ax2.text(0.5, 0.0, "\u25B2 \nN ", ha="center", fontsize=20, family="Arial", rotation=0)
+# ax2.text(0.5, 0.0, "\u25B2 \nN ", ha="center", fontsize=20, family="Arial", rotation=0)
 ax2.axis("off")
+# ---
+aoi = gpd.read_file("data/bbox.gpkg", driver="GPKG")
+aoi_bounds = [x for x in aoi.bounds.iloc[0]]
+extent = (aoi_bounds[0], aoi_bounds[2], aoi_bounds[1], aoi_bounds[3])
+wb = gpd.read_file("data/perl.gpkg", driver="GPKG")
+
+ax2 = plt.subplot(axes[1], xlabel="", projection=ccrs.PlateCarree())
+ax2.set_extent(extent, ccrs.PlateCarree())
+aoi.plot(ax=ax2, alpha=0)
+ax2.add_feature(cfeature.LAND)
+ax2.add_feature(cfeature.RIVERS)
+wb.plot(ax=ax2)
+
 # ---
 # plt.show()
 plt.savefig("figures/study_site.pdf", bbox_inches="tight")
