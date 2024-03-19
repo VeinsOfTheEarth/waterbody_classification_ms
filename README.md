@@ -4,7 +4,7 @@
 
 Code for the publication:
 
-> **Stachelek, J.**, Abolt, C.J., Schwenk, J., Scalable machine learning pipelines for waterbody delineation, classification, and change detection.
+> **Stachelek, J.**, Abolt, C.J., Schwenk, J., Enabling high resolution hydrologic routing with machine learning assisted waterbody classification.
 
 ### single waterbody in various product resolutions
 
