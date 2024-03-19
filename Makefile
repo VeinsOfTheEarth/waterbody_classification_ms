@@ -25,7 +25,7 @@ figures/table_metric-list.pdf: figures/table_metric-list.py scripts/utils.py
 
 manuscript: manuscript/manuscript.pdf manuscript/supplement.pdf
 
-manuscript/manuscript.pdf: manuscript/manuscript.tex manuscript/riverlakeid.bib
+manuscript/manuscript.pdf: manuscript/manuscript.tex manuscript/hydroml_2023.bib
 	cd manuscript && pdflatex manuscript.tex
 	cd manuscript && bibtex manuscript
 	cd manuscript && bibtex manuscript
