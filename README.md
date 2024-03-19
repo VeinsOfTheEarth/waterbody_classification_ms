@@ -1,4 +1,4 @@
-## Scalable machine learning pipelines for waterbody detection, classification, and change detection
+## Enabling high resolution hydrologic routing with machine learning assisted waterbody classification
 
 [![Paper DOI](https://img.shields.io/badge/Paper-DOI-blue.svg)](https://doi.org) [![Code DOI](https://img.shields.io/badge/Code-DOI-blue.svg)](https://doi.org) [![Data DOI](https://img.shields.io/badge/Data-DOI-blue.svg)](https://doi.org)
 
