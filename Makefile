@@ -15,6 +15,10 @@ figures/floodplain.pdf: figures/floodplain.py
 figures/study_site.pdf: figures/study_site.py
 	python $<
 
+figures/table_image-list.pdf: figures/table_image-list.py scripts/utils.py
+	python $<
+	pdfcrop $@ $@
+
 manuscript: manuscript/manuscript.pdf manuscript/supplement.pdf
 
 manuscript/manuscript.pdf: manuscript/manuscript.tex manuscript/riverlakeid.bib

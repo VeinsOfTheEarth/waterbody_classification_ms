@@ -8,3 +8,5 @@ manuscript/*.bbl
 manuscript/*.aux
 *.pptx
 *.xcf
+*/__pycache__
+mdtable.md
