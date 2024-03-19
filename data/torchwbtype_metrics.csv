@@ -1,0 +1,11 @@
+metric,description
+ninteriors,Number of polygon holes (interiors)
+area,Polygon area
+arearatio,Ratio of polygon area over area of oriented envelope enclosing the input geometry
+nvertices,Number of vertices
+llratio,Ratio of maximum line length over median line length
+perim_len,Perimeter length
+convex_area,Area of convex hull
+eccentricity,Eccentricity - ratio of focal distance over major axis length
+major_axis_length,Length of major axis
+minor_axis_length,Length of minor axis

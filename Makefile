@@ -19,6 +19,10 @@ figures/table_image-list.pdf: figures/table_image-list.py scripts/utils.py
 	python $<
 	pdfcrop $@ $@
 
+figures/table_metric-list.pdf: figures/table_metric-list.py scripts/utils.py
+	python $<
+	pdfcrop $@ $@
+
 manuscript: manuscript/manuscript.pdf manuscript/supplement.pdf
 
 manuscript/manuscript.pdf: manuscript/manuscript.tex manuscript/riverlakeid.bib
