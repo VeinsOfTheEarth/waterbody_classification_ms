@@ -15,10 +15,13 @@ figures/floodplain.pdf: figures/floodplain.py
 figures/study_site.pdf: figures/study_site.py
 	python $<
 
-manuscript: manuscript/manuscript.pdf
+manuscript: manuscript/manuscript.pdf manuscript/supplement.pdf
 
 manuscript/manuscript.pdf: manuscript/manuscript.tex manuscript/riverlakeid.bib
 	cd manuscript && pdflatex manuscript.tex
 	cd manuscript && bibtex manuscript
 	cd manuscript && bibtex manuscript
 	cd manuscript && pdflatex manuscript.tex
+
+manuscript/supplement.pdf: manuscript/supplement.tex
+	cd manuscript && pdflatex supplement.tex
