@@ -14,10 +14,9 @@
 \usepackage{doi}
 \usepackage{listings}
 \usepackage{lineno}
+\usepackage{setspace}
 
 \linenumbers
-
-
 
 \title{Enabling high resolution hydrologic routing with machine learning assisted waterbody classification}
 
@@ -50,11 +49,22 @@ pdfauthor={Jemma Stachelek}
 
 \begin{document}
 \maketitle
+\doublespacing
 
-\begin{abstract}	
+\vspace{-2em}
+\section*{Keypoints}
+\begin{enumerate}
+	\item We demonstrate an automated deep learning pipeline for waterbody database creation that includes a novel waterbody classifier with an accuracy rate approaching 80\%
+	\item The pipeline produced similar results in terms of raw waterbody counts, area distributions, and waterbody types as that of a much more expensive to produce hand-curated product
+	\item The modular design of the pipeline makes it future-proof to forthcoming data products and algorithms as well as easily tailored to a variety of hydrologic routing tasks	
+\end{enumerate}
+\newpage
+
+\section*{Abstract}	
 	Some waterbody databases are focused on delineating all areas of standing water irrespective of the persistence or “type” of the waterbody. However, for other applications, such as integration of waterbodies into hydrologic routing schemes, capturing the long-term dynamics of persistent waterbodies is of critical importance. The creation of such databases is costly, often requiring manual intervention in many of the underlying steps. As an alternative, we developed a machine learning pipeline that facilitates the rapid, accurate, and inexpensive creation of these databases using deep neural networks operating on high resolution imagery. In addition to basic delineation tasks, capturing time dynamics, and detection of waterbody boundaries, the pipeline includes a novel approach to classify and prune spurious and ephemeral non-lake waterbodies. We demonstrate the accuracy, performance, scaling, and consistency of the pipeline compared with a much more expensive to produce hand-curated product with the aim of scaling to continental and global extents.
-\end{abstract}
 
+\section*{Plain Language Summary}
+	Detailed simulations of streamflow routing require a database of lakes and other waterbodies which are persistent in time.  The construction of these persistent waterbody databases typically requires significant labor and computational expense. One step that has remained resistant to automation is that of pruning ephemeral and/or spurious waterbodies. As a solution to this challenge, we developed a deep learning classifier model as part of an end-to-end database production pipeline. We demonstrate the accuracy, performance, scaling, and consistency of the pipeline compared with a much more expensive to produce hand-curated product. The modular design of the pipeline makes it future-proof to the development of new water detection, waterbody delineation, and classification products/methodologies as well as easily tailored to a variety of hydrologic routing tasks.
 
 \section{Introduction}
 The uses of waterbody databases and the motivations for their creation are varied. Some waterbody databases are focused on delineating all areas of standing water irrespective of the persistence or “type” of the waterbody. This can be valuable for quantifying the state of the system with respect to general wetness, deriving estimates of greenhouse gas flux, or  characterizing the changing seasonality of a system \citep{cooleyArcticBorealLake2019, mullenUsingHighResolution2023}. However, for other applications, such as integration of waterbodies into hydrologic routing schemes, capturing the long-term dynamics and extent of persistent waterbodies is of critical importance \citep{davidDecadeRAPIDReflections2016,mizukamiVectorBasedRiver2021}. The construction of these persistent waterbody databases typically requires significant labor and computational expense for steps like manual tracing of waterbody outlines and automated correction of missing data \citep{amatulliHydrography90mNewHighresolution2022,lehnerGlobalRiverHydrography2013}.
@@ -93,7 +103,7 @@ We tested our pipeline in an area of the Yukon Flats watershed in Alaska, USA (F
 
 \begin{figure}
 	\centering
-	\includegraphics[width=8cm]{../figures/study_site}
+	\includegraphics[width=9cm]{../figures/study_site}
 	\caption{Map of our case study site centered northeast of Fairbanks at approximately 149 deg W, 66 deg N (left panel, red box) alongside a zoomed in view of our case study AOI with PeRL waterbodies (right panel).}
 	\label{fig:study_site}
 \end{figure}
@@ -120,7 +130,7 @@ Beyond the similarity in terms of raw waterbody counts and area distributions, w
 
 \begin{figure}
 	\centering
-	\includegraphics[width=10cm]{../figures/floodplain}
+	\includegraphics[width=11cm]{../figures/floodplain}
 	\caption{Comparison between waterbodies in the manually-delineated PeRL dataset (green polygons) and those in the medium resolution HydroLAKES dataset (yellow polygons, left panel), the medium resolution GLAKES dataset (pink polygons, middle panel), and our wbextractor pipeline (blue polygons, right panel).}
 	\label{fig:floodplain}
 \end{figure}
