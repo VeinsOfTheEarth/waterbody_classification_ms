@@ -40,7 +40,8 @@
 
 % Uncomment to override  the `A preprint' in the header
 \renewcommand{\headeright}{\href{https://doi.org/}{DOI: 10.000/XXXXX}}
-\renewcommand{\undertitle}{This is a draft of a Manuscript in preparation for publication in Geophysical Research Letters \href{https://doi.org/10.1000/XXXXX}{DOI: 10.1000/XXXXX}}
+\renewcommand{\undertitle}{This is a draft of a Manuscript in preparation for publication}
+% \renewcommand{\undertitle}{This is a draft of a Manuscript in preparation for \href{https://doi.org/10.1000/XXXXX}{DOI: 10.1000/XXXXX}}
 \renewcommand{\shorttitle}{ML assisted waterbody classification for routing}
 
 %%% Add PDF metadata to help others organize their library
@@ -152,9 +153,9 @@ A key innovation of our pipeline is our inclusion of an ML waterbody classifier 
 
 We found that by incorporating high resolution imagery with advanced ML algorithms, we were able to produce a dataset approaching the accuracy of much more expensive hand-curated products. Although our pipeline does a better job of matching the number and area range of the lakes in the study area than GLAKES or HydroLAKES it still does not exactly match PeRL. This indicates that more development is needed to achieve this high standard of accuracy keeping in mind that our study was motivated by a hydrologic routing use-case, which in our experience would still benefit from the increased resolution and accuracy afforded by our tool even if it doesn't have as high of a resolution as manually delineated products. For hydrologic routing tasks, wbextractor is capable of resolving waterbodies to match the scale of the vector-river networks in which they are embedded. This has been recognized as a critical need in Earth System Model applications involving routing of streamflow and its constituents \citep{mizukamiVectorBasedRiver2021}. With the flexibility of our pipeline and the ability for automated type identification of pruning of spurious waterbodies, our tool has the potential to seed the next generation of hydrologic routing and watershed-centric research at the global scale particularly as it becomes more clear that static DEM-based products are inadequate in an era of rapid climate change.
 
-\section{Data Availability Statement}
+% \section{Data Availability Statement}
 
-All data and code associated with this manuscript will be made available by the time of publication (or earlier pending the conclusion of US Department of Energy approvals) with a Zenodo DOI at: \href{https://doi.org}{https://doi.org}
+% All data and code associated with this manuscript will be made available by the time of publication (or earlier pending the conclusion of US Department of Energy approvals) with a Zenodo DOI at: \href{https://doi.org}{https://doi.org}
 
 \section{Acknowledgements}
 
