@@ -10,3 +10,4 @@ manuscript/*.aux
 *.xcf
 */__pycache__
 mdtable.md
+data/CubeSat_Arctic_Boreal_LakeArea_1667
