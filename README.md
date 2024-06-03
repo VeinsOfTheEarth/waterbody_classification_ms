@@ -6,6 +6,16 @@ Code for the publication:
 
 > **Stachelek, J.**, Abolt, C.J., Schwenk, J., Enabling high resolution hydrologic routing with machine learning assisted waterbody classification.
 
+### Setup
+
+```shell
+# On Darwin:
+module load miniconda3
+source activate planet
+pip install --upgrade -e ~/python/wbextractor
+
+```
+
 ### single waterbody in various product resolutions
 
 ![](figures/single_wb.png)

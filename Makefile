@@ -1,7 +1,24 @@
-.PHONY: all manuscript figures
+.PHONY: all manuscript figures data
 
-all: manuscript figures
+gpkgs := $(addsuffix /data/wb_all.gpkg, $(shell cat data/aois.txt))
 
+all: manuscript figures data
+
+# echo $(firstword $(subst /, ,$(<D)))
+data_eval: $(gpkgs)
+
+$(gpkgs): data/aois.txt
+	@echo $(addprefix data/, $(firstword $(subst /, ,$(@D))))
+	@echo $(firstword $(subst /, ,$(@D)))
+	@echo $(addsuffix .tif, $(addprefix data/CubeSat_Arctic_Boreal_LakeArea_1667/data/Yukon_Flats_Basin-buffered_mask_, $(firstword $(subst /, ,$(@D)))))
+	wbpopulate \
+	--folder $(addprefix data/, $(firstword $(subst /, ,$(@D)))) \
+	--tag $(firstword $(subst /, ,$(@D))) \
+	--aoi $(addsuffix .tif, $(addprefix data/CubeSat_Arctic_Boreal_LakeArea_1667/data/Yukon_Flats_Basin-buffered_mask_, $(firstword $(subst /, ,$(@D))))) \
+	--model /vast/home/jsta/python/torchwbtype/torchwbtype/data
+	#
+	wbrun --folder $(addprefix data/, $(firstword $(subst /, ,$(@D))))
+	
 manuscript: manuscript/manuscript.pdf
 
 figures: figures/single_wb.pdf figures/floodplain.pdf figures/study_site.pdf
