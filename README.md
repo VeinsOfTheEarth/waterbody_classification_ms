@@ -13,7 +13,8 @@ Code for the publication:
 module load miniconda3
 source activate planet
 pip install --upgrade -e ~/python/wbextractor
-
+export wbmask=/path/to/wbextractor/cli/wbmask
+cp -R ~/python/wbextractor/checkpoints ./checkpoints
 ```
 
 ### single waterbody in various product resolutions
