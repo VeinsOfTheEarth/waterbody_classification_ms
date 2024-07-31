@@ -1,0 +1,6 @@
+[submodule "torchwbtype"]
+	path = torchwbtype
+	url = https://github.com/VeinsOfTheEarth/torchwbtype
+[submodule "wbextractor"]
+	path = wbextractor
+	url = https://github.com/VeinsOfTheEarth/wbextractor
