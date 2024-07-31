@@ -1,6 +1,6 @@
 ## Enabling high resolution hydrologic routing with machine learning assisted waterbody classification
 
-[![Paper DOI](https://img.shields.io/badge/Paper-10.22541/essoar.171578782.22110644/v1-blue.svg)](https://doi.org/10.22541/essoar.171578782.22110644/v1) [![Code DOI](https://img.shields.io/badge/Code-DOI-blue.svg)](https://doi.org) [![Data DOI](https://img.shields.io/badge/Data-DOI-blue.svg)](https://doi.org)
+[![Paper DOI](https://img.shields.io/badge/Paper-10.22541/essoar.171578782.22110644/v1-blue.svg)](https://doi.org/10.22541/essoar.171578782.22110644/v1) [![Code DOI](https://img.shields.io/badge/Code-10.5281/zenodo.13145465-blue.svg)](https://doi.org) [![Data DOI](https://img.shields.io/badge/Data-DOI-blue.svg)](https://doi.org)
 
 Code for the publication:
 
