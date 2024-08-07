@@ -1,5 +1,6 @@
 .PHONY: all manuscript figures data
 
+PDFCROP=pdfcrop.pl
 gpkgs := $(addsuffix /data/wb_all.gpkg, $(shell cat data/aois.txt))
 
 all: manuscript figures data
@@ -19,9 +20,9 @@ $(gpkgs): data/aois.txt
 	#
 	wbrun --folder $(addprefix data/, $(firstword $(subst /, ,$(@D)))) --target masks
 	
-manuscript: manuscript/manuscript.pdf
+manuscript: manuscript/manuscript.pdf figures
 
-figures: figures/single_wb.pdf figures/floodplain.pdf figures/study_site.pdf
+figures: figures/single_wb.pdf figures/floodplain.pdf figures/study_site.pdf figures/table_image-list.pdf
 
 figures/single_wb.pdf: figures/single_wb.py
 	python $<
@@ -34,11 +35,11 @@ figures/study_site.pdf: figures/study_site.py
 
 figures/table_image-list.pdf: figures/table_image-list.py scripts/utils.py
 	python $<
-	pdfcrop $@ $@
+	$(PDFCROP) $@ $@
 
 figures/table_metric-list.pdf: figures/table_metric-list.py scripts/utils.py
 	python $<
-	pdfcrop $@ $@
+	$(PDFCROP) $@ $@
 
 manuscript: manuscript/combined.pdf
 

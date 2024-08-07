@@ -10,6 +10,8 @@ Code for the publication:
 
 ```shell
 # Follow wbextractor setup instructions, then:
+conda activate planet
+conda install seaborn cartopy tabulate pdfcrop.pl -c conda-forge
 export wbmask=/path/to/wbextractor/cli/wbmask
 cp -R ~/path/to/wbextractor/checkpoints ./checkpoints
 ```
