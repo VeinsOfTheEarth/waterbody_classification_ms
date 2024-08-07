@@ -1,2 +1,2 @@
-*.sty linguist-vendored
-*.bst linguist-vendored
+*/*.sty linguist-vendored
+*/*.bst linguist-vendored
