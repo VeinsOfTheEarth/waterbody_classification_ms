@@ -18,7 +18,7 @@ $(gpkgs): data/aois.txt
 	--aoi $(addsuffix .tif, $(addprefix data/CubeSat_Arctic_Boreal_LakeArea_1667/data/Yukon_Flats_Basin-buffered_mask_, $(firstword $(subst /, ,$(@D))))) \
 	--model /vast/home/jsta/python/torchwbtype/torchwbtype/data
 	#
-	wbrun --folder $(addprefix data/, $(firstword $(subst /, ,$(@D)))) --target csvs
+	wbrun --folder $(addprefix data/, $(firstword $(subst /, ,$(@D))))
 	
 manuscript: manuscript/manuscript.pdf figures
 
@@ -55,3 +55,6 @@ manuscript/manuscript.pdf: manuscript/manuscript.tex manuscript/hydroml_2023.bib
 
 manuscript/supplement.pdf: manuscript/supplement.tex
 	cd manuscript && pdflatex supplement.tex
+
+clean:
+	-@rm core.*
