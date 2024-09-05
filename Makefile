@@ -1,24 +1,27 @@
-.PHONY: all manuscript figures data
+.PHONY: all manuscript figures data_eval test
 
 PDFCROP=pdfcrop.pl
-gpkgs := $(addsuffix /data/wb_all.gpkg, $(shell cat data/aois.txt))
+gpkgs := $(addprefix data/, $(addsuffix /data/wb_all.gpkg, $(shell cat data/aois.txt)))
 
-all: manuscript figures data
+test:
+	@echo $(gpkgs)
 
-# echo $(firstword $(subst /, ,$(<D)))
+all: manuscript figures data_eval
+
 data_eval: $(gpkgs)
 
 $(gpkgs): data/aois.txt
-	@echo $(addprefix data/, $(firstword $(subst /, ,$(@D))))
-	@echo $(firstword $(subst /, ,$(@D)))
-	@echo $(addsuffix .tif, $(addprefix data/CubeSat_Arctic_Boreal_LakeArea_1667/data/Yukon_Flats_Basin-buffered_mask_, $(firstword $(subst /, ,$(@D)))))
+	@echo $(firstword $(subst /data, ,$(@D)))
+	@echo $(subst data/, , $(subst /data, , $(firstword $(subst /data, ,$(@D)))))
+	@echo $(addsuffix .tif, $(addprefix data/CubeSat_Arctic_Boreal_LakeArea_1667/data/Yukon_Flats_Basin-buffered_mask_, $(subst /data, , $(firstword $(subst data/, ,$(@D))))))
+	#
 	wbpopulate \
-	--folder $(addprefix data/, $(firstword $(subst /, ,$(@D)))) \
-	--tag $(firstword $(subst /, ,$(@D))) \
-	--aoi $(addsuffix .tif, $(addprefix data/CubeSat_Arctic_Boreal_LakeArea_1667/data/Yukon_Flats_Basin-buffered_mask_, $(firstword $(subst /, ,$(@D))))) \
+	--folder $(firstword $(subst /data, ,$(@D))) \
+	--tag $(subst data/, , $(subst /data, , $(firstword $(subst /data, ,$(@D))))) \
+	--aoi $(addsuffix .tif, $(addprefix data/CubeSat_Arctic_Boreal_LakeArea_1667/data/Yukon_Flats_Basin-buffered_mask_, $(subst /data, , $(firstword $(subst data/, ,$(@D)))))) \
 	--model /vast/home/jsta/python/torchwbtype/torchwbtype/data
 	#
-	wbrun --folder $(addprefix data/, $(firstword $(subst /, ,$(@D))))
+	wbrun --folder $(firstword $(subst /data, ,$(@D)))
 	
 manuscript: manuscript/manuscript.pdf figures
 
@@ -58,3 +61,4 @@ manuscript/supplement.pdf: manuscript/supplement.tex
 
 clean:
 	-@rm core.*
+	-@python -c "import os; import shutil; import re; [shutil.rmtree(f) for f in os.listdir('.') if re.search(r'.{8}-.{4}', f) is not None];"
