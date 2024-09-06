@@ -10,7 +10,7 @@ all: manuscript figures data_eval
 
 data_eval: $(gpkgs)
 
-$(gpkgs): data/aois.txt
+$(gpkgs): 
 	@echo $(firstword $(subst /data, ,$(@D)))
 	@echo $(subst data/, , $(subst /data, , $(firstword $(subst /data, ,$(@D)))))
 	@echo $(addsuffix .tif, $(addprefix data/CubeSat_Arctic_Boreal_LakeArea_1667/data/Yukon_Flats_Basin-buffered_mask_, $(subst /data, , $(firstword $(subst data/, ,$(@D))))))
@@ -21,6 +21,7 @@ $(gpkgs): data/aois.txt
 	--aoi $(addsuffix .tif, $(addprefix data/CubeSat_Arctic_Boreal_LakeArea_1667/data/Yukon_Flats_Basin-buffered_mask_, $(subst /data, , $(firstword $(subst data/, ,$(@D)))))) \
 	--model /vast/home/jsta/python/torchwbtype/torchwbtype/data
 	#
+	wbrun --folder $(firstword $(subst /data, ,$(@D)))
 	wbrun --folder $(firstword $(subst /data, ,$(@D)))
 	
 manuscript: manuscript/manuscript.pdf figures
