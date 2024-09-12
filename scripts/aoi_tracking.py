@@ -7,8 +7,14 @@ import geopandas as gpd
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--n_aois", default=[1], nargs=1, type=int)
+parser.add_argument("--return_incomplete", default=False, action="store_true")
 args = parser.parse_args()
 n_aois = args.n_aois[0]
+return_incomplete = args.return_incomplete
+
+
+def folder_exists(x):
+    return os.path.exists("data/" + x)
 
 
 def get_completed():
@@ -17,23 +23,34 @@ def get_completed():
     return res
 
 
-def get_todo():
+def get_todo(incomplete=False):
     todo = gpd.read_file(
         "data/CubeSat_Arctic_Boreal_LakeArea_1667/data/Yukon_Flats_Basin_Lakes/Yukon_Flats_Basin_Lakes.shp",
         dtype={"Tile": str},  # dtype specification does not work!!
     )
     todo = ["0" + str(x) for x in todo["Tile"].unique()]
-    todo = [
-        x
-        for x in itertools.compress(
-            todo, [not os.path.exists("data/" + x) for x in todo]
-        )
-    ]
+    if not incomplete:
+        todo = [
+            x
+            for x in itertools.compress(
+                todo, [not os.path.exists("data/" + x) for x in todo]
+            )
+        ]
     done = get_completed()
     not_done = [x for x in set(todo) - set(done)]
+
+    if incomplete:
+        f_exists = [folder_exists(x) for x in not_done]
+        aoi_incomplete = [x for x in itertools.compress(not_done, f_exists)]
+        return aoi_incomplete
+
     return not_done
 
 
-todo = get_todo()
-for i in range(n_aois):
-    print("sbatch -J " + todo[i] + " sbatch.sh " + todo[i])
+todo = get_todo(return_incomplete)
+if return_incomplete:
+    for i in range(len(todo)):
+        print("sbatch -J " + todo[i] + " sbatch.sh " + todo[i])
+else:
+    for i in range(n_aois):
+        print("sbatch -J " + todo[i] + " sbatch.sh " + todo[i])
