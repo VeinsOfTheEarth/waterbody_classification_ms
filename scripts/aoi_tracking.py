@@ -24,11 +24,23 @@ def get_completed():
 
 
 def get_todo(incomplete=False):
-    todo = gpd.read_file(
-        "data/CubeSat_Arctic_Boreal_LakeArea_1667/data/Yukon_Flats_Basin_Lakes/Yukon_Flats_Basin_Lakes.shp",
-        dtype={"Tile": str},  # dtype specification does not work!!
+    todo = glob.glob(
+        "data/CubeSat_Arctic_Boreal_LakeArea_1667/data/Yukon_Flats_Basin-buffered_mask_*.tif"
     )
-    todo = ["0" + str(x) for x in todo["Tile"].unique()]
+    todo = [
+        x.replace(
+            "data/CubeSat_Arctic_Boreal_LakeArea_1667/data/Yukon_Flats_Basin-buffered_mask_",
+            "",
+        ).replace(".tif", "")
+        for x in todo
+    ]
+
+    # write all todos to txt file
+    os.remove("todos.txt")
+    fl = open("todos.txt", "a")
+    [fl.write(x + "\n") for x in todo]
+    fl.close()
+
     if not incomplete:
         todo = [
             x
