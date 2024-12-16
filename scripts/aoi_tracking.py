@@ -30,7 +30,7 @@ def get_todo(incomplete=False):
         dtype={"Tile": str},  # dtype specification does not work!!
     )
     todo = ["0" + str(x) for x in todo["Tile"].unique()]
-    breakpoint()
+    # breakpoint()
 
     # # read from tifs
     # todo = glob.glob(
