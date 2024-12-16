@@ -2,9 +2,12 @@
 
 PDFCROP=pdfcrop.pl
 gpkgs ?= $(addprefix data/, $(addsuffix /data/wb_all.gpkg, $(shell cat data/aois.txt)))
+populates ?= $(addprefix data/, $(addsuffix /query_ids_quality.txt, $(shell cat to_transfer.txt)))
+preflights ?= $(addprefix data/, $(addsuffix /query_ids_quality.txt, $(shell cat preflight.txt)))
 
-test:
-	@echo $(gpkgs)
+# @echo $(gpkgs)
+test:	
+	@echo $(populates)
 
 all: manuscript figures data_eval
 
@@ -19,11 +22,39 @@ $(gpkgs): data/aois.txt
 	--folder $(firstword $(subst /data, ,$(@D))) \
 	--tag $(subst data/, , $(subst /data, , $(firstword $(subst /data, ,$(@D))))) \
 	--aoi $(addsuffix .tif, $(addprefix data/CubeSat_Arctic_Boreal_LakeArea_1667/data/Yukon_Flats_Basin-buffered_mask_, $(subst /data, , $(firstword $(subst data/, ,$(@D)))))) \
-	--model /vast/home/jsta/python/torchwbtype/torchwbtype/data
+	--model $(HOME)/python/torchwbtype/torchwbtype/data
 	#
 	wbrun --folder $(firstword $(subst /data, ,$(@D)))
 	wbrun --folder $(firstword $(subst /data, ,$(@D)))
-	
+
+# --- for workflows where the Planet API is not available, and
+#		data is staged from elsewhere
+populate:
+	wbpopulate --folder data/$(AOI_NUMBER) --tag $(AOI_NUMBER) --aoi data/CubeSat_Arctic_Boreal_LakeArea_1667/data/Yukon_Flats_Basin-buffered_mask_$(AOI_NUMBER).tif --model $(HOME)/python/torchwbtype/torchwbtype/data
+
+populates_eval: $(populates)
+
+$(populates): to_transfer.txt
+	@echo $(firstword $(subst /data, ,$(@D)))
+	@echo $(subst data/, , $(subst /data, , $(firstword $(subst /data, ,$(@D)))))
+	@echo $(addsuffix .tif, $(addprefix data/CubeSat_Arctic_Boreal_LakeArea_1667/data/Yukon_Flats_Basin-buffered_mask_, $(subst /data, , $(firstword $(subst data/, ,$(@D))))))
+	#
+	wbpopulate \
+	--folder $(firstword $(subst /data, ,$(@D))) \
+	--tag $(subst data/, , $(subst /data, , $(firstword $(subst /data, ,$(@D))))) \
+	--aoi $(addsuffix .tif, $(addprefix data/CubeSat_Arctic_Boreal_LakeArea_1667/data/Yukon_Flats_Basin-buffered_mask_, $(subst /data, , $(firstword $(subst data/, ,$(@D)))))) \
+	--model $(HOME)/python/torchwbtype/torchwbtype/data
+
+preflight:
+	make -B -f data/$(AOI_NUMBER)/Makefile query_ids_quality_eval
+
+preflights_eval: $(preflights)
+
+$(preflights): to_transfer.txt
+	make -B -f data/$(subst data/,,$(subst /data,,$(firstword $(subst /data,,$(@D)))))/Makefile query_ids_quality_eval
+
+# ---
+
 manuscript: manuscript/manuscript.pdf figures
 
 figures: figures/single_wb.pdf figures/floodplain.pdf figures/study_site.pdf figures/table_image-list.pdf
@@ -64,3 +95,6 @@ clean:
 	-@rm core.*
 	-@rm *.out
 	-@python -c "import os; import shutil; import re; [shutil.rmtree(f) for f in os.listdir('.') if re.search(r'.{8}-.{4}', f) is not None];"
+
+install:
+	pip install --upgrade -e $(HOME)/python/wbextractor

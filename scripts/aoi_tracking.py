@@ -17,6 +17,10 @@ def folder_exists(x):
     return os.path.exists("data/" + x)
 
 
+def has_tifs(x):
+    return len(glob.glob("data/" + x + "/data/tif/*.tif")) > 0
+
+
 def get_completed():
     res = glob.glob("data/*/data/wb_all.gpkg")
     res = [os.path.dirname(x).replace("data", "").replace("/", "") for x in res]
@@ -62,7 +66,10 @@ def get_todo(incomplete=False):
 
     if incomplete:
         f_exists = [folder_exists(x) for x in not_done]
+        tifs_exist = [has_tifs(x) for x in not_done]
+
         aoi_incomplete = [x for x in itertools.compress(not_done, f_exists)]
+        aoi_incomplete = [x for x in itertools.compress(aoi_incomplete, tifs_exist)]
         return aoi_incomplete
 
     return not_done
@@ -70,6 +77,13 @@ def get_todo(incomplete=False):
 
 todo = get_todo(return_incomplete)
 if return_incomplete:
+    try:
+        os.remove("preflight.txt")
+    except:
+        pass
+    fl = open("preflight.txt", "a")
+    [fl.write(x + "\n") for x in todo]
+    fl.close()
     for i in range(len(todo)):
         print("sbatch -J " + todo[i] + " sbatch.sh " + todo[i])
 else:
