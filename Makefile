@@ -95,6 +95,9 @@ clean:
 	-@rm core.*
 	-@rm *.out
 	-@python -c "import os; import shutil; import re; [shutil.rmtree(f) for f in os.listdir('.') if re.search(r'.{8}-.{4}', f) is not None];"
+	-@rm mask*.tif
+	-@rm res_sum*.tif
+	-@rm recurrence*.gpkg
 
 install:
 	pip install --upgrade -e $(HOME)/python/wbextractor
