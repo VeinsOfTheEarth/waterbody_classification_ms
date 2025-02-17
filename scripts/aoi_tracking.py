@@ -63,6 +63,8 @@ def get_todo(staged_tifs=False, return_incomplete=False):
     )
     todo = ["0" + str(x) for x in todo["Tile"].unique()]
 
+    # TODO: exclude entries in not_done.txt (tifs not staged and not obtainable)
+
     # write all todos to txt file
     os.remove("todos.txt")
     fl = open("todos.txt", "a")
