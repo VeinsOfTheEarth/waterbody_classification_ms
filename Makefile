@@ -1,4 +1,4 @@
-.PHONY: all manuscript figures data_eval test data
+.PHONY: all manuscript figures data_eval test
 
 PDFCROP=pdfcrop.pl
 gpkgs ?= $(addprefix data/, $(addsuffix /data/wb_all.gpkg, $(shell cat data/aois.txt)))
@@ -6,11 +6,6 @@ populates ?= $(addprefix data/, $(addsuffix /query_ids_quality.txt, $(shell cat 
 preflights ?= $(addprefix data/, $(addsuffix /query_ids_quality.txt, $(shell cat preflight.txt)))
 
 all: manuscript figures data
-
-data: data/cubeSat_buffered_mask_tiles.gpkg
-
-data/cubeSat_buffered_mask_tiles.gpkg: data/CubeSat_Arctic_Boreal_LakeArea_1667/data/CubeSat_Buffered_Mask_Tiles.kmz
-	ogr2ogr $@ $<
 
 # this target is meant to be called manually, kicks off full pipeline
 data_eval: $(gpkgs)
