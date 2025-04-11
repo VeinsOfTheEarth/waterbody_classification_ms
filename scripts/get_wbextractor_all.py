@@ -2,6 +2,7 @@
 import sys
 import glob
 import itertools
+import subprocess
 import numpy as np
 import xarray as xr
 import pandas as pd
@@ -12,11 +13,7 @@ sys.path.append(".")
 from src import utils
 
 pd.set_option("display.max_columns", None)
-
-# read selected aois from data/wb_all.zip
-path_zip = "data/wb_all.zip"
-# aois = ["0670116", "0769611"]
-aois = ["0670116"]
+pd.set_option("display.max_rows", None)
 
 
 def aoi_health_check(aoi, path_zip):
@@ -57,6 +54,7 @@ def make_fabric(aois, path_zip):
             {"aoi": aoi}, geometry=[box(*bounds)], index=[0], crs=crs
         ).to_crs(3995)
 
+    # breakpoint()
     aoi_bboxs = [get_tif_bbox(flist_aoi_tifs[i], aois[i]) for i in range(len(aois))]
 
     # ---
@@ -68,17 +66,26 @@ def make_fabric(aois, path_zip):
     # # mapview test.gpkg "aoi_boundaries,wb_all" ""
     # ---
 
-    # breakpoint()
-
     # split out wb(s) that touch aoi_boundary
-    gpd.sjoin(wb_all[0], gpd.GeoDataFrame(geometry=[aoi_bboxs[0].exterior[0]]))
-    breakpoint()
+    for i in range(len(wb_all)):
+        # i = 0
+        on_boundary = gpd.sjoin(
+            wb_all[i], gpd.GeoDataFrame(geometry=[aoi_bboxs[i].exterior[0]], crs=3995)
+        )[["id", "val"]]
+        on_boundary["on_boundary"] = 1
+        if on_boundary.shape[0] > 0:
+            wb_all[i] = pd.merge(wb_all[i], on_boundary, how="left")
+        # test2 = wb_all[i][wb_all[i]["on_boundary"] == 1]
+        # test2.to_file("test.gpkg", layer="on_boundary")
+        # # mapview test.gpkg "aoi_boundaries,on_boundary" ""
 
-    # remove wb(s) below an area threshold
-
-    # ---
+    # TODO: remove wb(s) below an area threshold
 
     # get all pairs of touching aoi boundaries
+    for i in range(len(wb_all)):
+        wb_all[i][wb_all[i]["on_boundary"] == 1].to_file(
+            "test.gpkg", layer="on_boundary" + str(i)
+        )
 
     # for each pair, evaluate those with an "on_boundary" flag for touching
 
@@ -93,5 +100,29 @@ def make_fabric(aois, path_zip):
     return None
 
 
-aoi_health_check(aois[0], path_zip=path_zip)["stats"]
+# read selected aois from data/wb_all.zip
+path_zip = "data/wb_all.zip"
+# unzip -l data/wb_all.zip
+run_cmd = (
+    "unzip -l "
+    + path_zip
+    + " | sed '1,3d;$d' | sed '$d' | sort | tail -n +8 | awk '{ print $4 }'"
+)
+aois_in_zip = subprocess.run(run_cmd, stdout=subprocess.PIPE, shell=True)
+aois_in_zip = [
+    x.replace("data/", "").replace("/wb_all.gpkg", "")
+    for x in aois_in_zip.stdout.decode("utf-8").split("\n")
+]
+aois_in_zip.sort()
+aois_in_zip = list(itertools.compress(aois_in_zip, [len(x) > 0 for x in aois_in_zip]))
+# aoi_health = [
+#     pd.DataFrame(aoi_health_check(aoi, path_zip=path_zip)["stats"], index=[0])
+#     for aoi in aois_in_zip
+# ]
+# pd.concat(aoi_health)
+
+# aois = ["0670116", "0769611"]
+# aois = ["0670116", "0670117"]
+# aois = ["0669915", "0669916"]
+aois = aois_in_zip[34:38]
 make_fabric(aois, path_zip)

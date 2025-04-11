@@ -54,7 +54,11 @@ $(preflights): to_transfer.txt
 
 manuscript: manuscript/manuscript.pdf figures
 
-figures: figures/single_wb.pdf figures/floodplain.pdf figures/study_site.pdf figures/table_image-list.pdf
+figures: \
+figures/single_wb.pdf \
+figures/floodplain.pdf \
+figures/study_site.pdf \
+figures/table_image-list.pdf
 
 figures/single_wb.pdf: figures/single_wb.py
 	python $<
@@ -75,7 +79,9 @@ figures/table_metric-list.pdf: figures/table_metric-list.py scripts/utils.py
 
 manuscript: manuscript/combined.pdf
 
-manuscript/combined.pdf: manuscript/manuscript.pdf manuscript/supplement.pdf
+manuscript/combined.pdf: \
+manuscript/manuscript.pdf \
+manuscript/supplement.pdf
 	pdftk manuscript/manuscript.pdf manuscript/supplement.pdf cat output $@
 
 
