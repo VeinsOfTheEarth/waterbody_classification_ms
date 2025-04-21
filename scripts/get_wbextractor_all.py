@@ -26,13 +26,29 @@ def aoi_health_check(aoi, path_zip):
     res.update({"median": round(np.quantile([x for x in gdf.area], 0.5), 2)})
     res.update({"q1": round(np.quantile([x for x in gdf.area], 0.1), 2)})
 
-    return {"stats": res}
+    def _is_failing(res):
+        res["npolys"] > 1
+        # TODO: remove wb(s) below an area threshold
+
+    return {"stats": res, "passes": _is_failing(res)}
 
 
 def make_fabric(aois, path_zip):
     # merge wbs that intersect (or touch?) aoi boundaries
     zipfiles = ["{}!data/{}/data/wb_all.gpkg".format(path_zip, aoi) for aoi in aois]
     wb_all = [(gpd.read_file(x).to_crs(3995)) for x in zipfiles]
+
+    # see torchwbtype.features.shapely_properties
+    wb_all_clean = []
+    for gdf_sub in wb_all:
+        gdf_sub["arearatio"] = [
+            round(gdf_shapely.area / gdf_shapely.oriented_envelope.area, 3)
+            for gdf_shapely in gdf_sub.geometry
+        ]
+        gdf_sub = gdf_sub[gdf_sub["arearatio"] > 0.07]
+        wb_all_clean.append(gdf_sub)
+    wb_all = wb_all_clean
+
     for i in range(len(wb_all)):
         wb_all[i]["idx"] = aois[i]
 
@@ -54,8 +70,18 @@ def make_fabric(aois, path_zip):
             {"aoi": aoi}, geometry=[box(*bounds)], index=[0], crs=crs
         ).to_crs(3995)
 
-    # breakpoint()
     aoi_bboxs = [get_tif_bbox(flist_aoi_tifs[i], aois[i]) for i in range(len(aois))]
+    # # get all pairs of touching aoi boundaries
+    aoi_bboxs_gdf = gpd.GeoDataFrame(pd.concat(aoi_bboxs))
+    aoi_pairs = aoi_bboxs_gdf.sjoin(
+        aoi_bboxs_gdf[["aoi", "geometry"]], how="left", predicate="overlaps"
+    )[["aoi_left", "aoi_right"]]
+    swap = aoi_pairs["aoi_left"] < aoi_pairs["aoi_right"]
+    aoi_pairs.loc[swap, ["aoi_left", "aoi_right"]] = aoi_pairs.loc[
+        swap, ["aoi_right", "aoi_left"]
+    ].values
+    aoi_pairs = aoi_pairs.drop_duplicates(subset=["aoi_left", "aoi_right"])
+    aoi_pairs = aoi_pairs[~pd.isna(aoi_pairs["aoi_right"])]
 
     # ---
     pd.concat(aoi_bboxs).reset_index(drop=True).to_file(
@@ -68,28 +94,27 @@ def make_fabric(aois, path_zip):
 
     # split out wb(s) that touch aoi_boundary
     for i in range(len(wb_all)):
-        # i = 0
         on_boundary = gpd.sjoin(
             wb_all[i], gpd.GeoDataFrame(geometry=[aoi_bboxs[i].exterior[0]], crs=3995)
         )[["id", "val"]]
         on_boundary["on_boundary"] = 1
         if on_boundary.shape[0] > 0:
             wb_all[i] = pd.merge(wb_all[i], on_boundary, how="left")
+        else:
+            wb_all[i]["on_boundary"] = 0
         # test2 = wb_all[i][wb_all[i]["on_boundary"] == 1]
         # test2.to_file("test.gpkg", layer="on_boundary")
         # # mapview test.gpkg "aoi_boundaries,on_boundary" ""
-
-    # TODO: remove wb(s) below an area threshold
-
-    # get all pairs of touching aoi boundaries
+    # debugging
     for i in range(len(wb_all)):
-        wb_all[i][wb_all[i]["on_boundary"] == 1].to_file(
-            "test.gpkg", layer="on_boundary" + str(i)
-        )
+        if wb_all[i][wb_all[i]["on_boundary"] == 1].shape[0] > 0:
+            wb_all[i][wb_all[i]["on_boundary"] == 1].to_file(
+                "test.gpkg", layer="on_boundary" + str(i)
+            )
 
-    # for each pair, evaluate those with an "on_boundary" flag for touching
+    # for each aoi pair, evaluate those with an "on_boundary" flag for touching
 
-    # merge those that touch
+    # merge those that touch into a separate "layer"
 
     # remove original wb(s) corresponding to each merge from parent wb_all members
 

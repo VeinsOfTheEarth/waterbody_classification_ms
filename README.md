@@ -16,6 +16,12 @@ export wbmask=/path/to/wbextractor/cli/wbmask
 cp -R ~/path/to/wbextractor/checkpoints ./checkpoints
 ```
 
+### Usage
+
+```shell
+make all
+```
+
 ### single waterbody in various product resolutions
 
 ![](figures/single_wb.png)
