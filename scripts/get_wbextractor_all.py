@@ -62,6 +62,14 @@ def make_fabric(aois, path_zip):
             flist_aoi_tifs, [any([aoi in x for aoi in aois]) for x in flist_aoi_tifs]
         )
     )
+    aois_in_order = []
+    for aoi in aois:
+        aois_in_order.append(
+            list(
+                itertools.compress(flist_aoi_tifs, [aoi in ff for ff in flist_aoi_tifs])
+            )[0]
+        )
+    flist_aoi_tifs = aois_in_order
 
     def get_tif_bbox(fname, aoi):
         crs = str(xr.open_dataset(fname, engine="rasterio").rio.crs).split(":")[1]
