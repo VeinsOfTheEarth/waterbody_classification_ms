@@ -19,6 +19,8 @@ cp -R ~/path/to/wbextractor/checkpoints ./checkpoints
 ### Usage
 
 ```shell
+conda activate planet
+python scripts/get_wbextractor_all.py
 make all
 ```
 
